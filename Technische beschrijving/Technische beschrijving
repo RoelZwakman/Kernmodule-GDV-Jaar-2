@@ -1,1 +1,3 @@
 Hier zit de technische beschrijving in
+
+Qua design patterns die nuttig zijn voor mijn game is er eigenlijk alleen maar de Singleton. Deze gebruik ik voor het bijhouden van de score.
