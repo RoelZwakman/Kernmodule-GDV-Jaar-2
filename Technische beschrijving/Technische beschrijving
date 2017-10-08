@@ -1,5 +1,4 @@
 TECHNISCHE BESCHRIJVING
-
 Het spel is een versie van pong waar de speler de bal is. De speler moet zichzelf op de paddles afvuren. De speler moet eerst
 de linkerpaddle raken, dan de rechterpaddle, dan weer de linkerpaddle, en zo voorts. De speler moet binnen de tijdslimiet de
 volgende paddle raken. Iedere keer dat de speler de juiste paddle raakt zal deze één punt opleveren.
