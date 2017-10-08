@@ -7,3 +7,6 @@ DESIGN PATTERNS
 Qua design patterns die nuttig zijn voor mijn game is er eigenlijk alleen maar de Singleton. Deze gebruik ik voor het bijhouden 
 van de score.
 
+PERSOONLIJKE UITDAGINGEN
+De uitdaging voor mij bij dit project is om de code netjes en zo min mogelijk van elkaar afhankelijk te laten werken. Dit is
+een probleem waar ik vaak tegen aanloop. 
