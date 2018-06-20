@@ -16,7 +16,6 @@ public class BallEntity : MonoBehaviour {
     [Header("Bouncing")]
     public float bounceForce;
     public float bounceTargetRange;
-    public GameObject bounceEffect;
 
 
     void Awake()
@@ -71,7 +70,7 @@ public class BallEntity : MonoBehaviour {
 
 
         CheckScore(_colName); ////Checks if score should be added or not
-        Bounce(_colName); ////Bounces away
+        Bounce(); ////Bounces away
     }
 
     private void CheckScore(string _colName)
@@ -98,13 +97,13 @@ public class BallEntity : MonoBehaviour {
         }
     }
 
-    private void Bounce(string _colName) ////Bounces the ball to the left or right
+    private void Bounce() ////Bounces the ball to the left or right
     {
         Vector3 _targetPos = new Vector3(0, Random.Range(0 - bounceTargetRange / 2, bounceTargetRange / 2), 0);
         Rigidbody rb = GetComponent<Rigidbody>();
         rb.velocity = new Vector3(0, 0, 0);
 
-        Instantiate(bounceEffect, transform.position, Quaternion.identity);
+        ParticlePooler.instance.SpawnFromPoolHitFX(transform);
         transform.LookAt(_targetPos);
         rb.AddForce(transform.forward * bounceForce);
 

@@ -6,15 +6,20 @@ public class PaddleHitExplosion : MonoBehaviour {
 
     public float delay;
 
-	void Start()
+	private void Start()
+    {
+        StartDespawnSequence();
+    }
+
+    public void StartDespawnSequence()
     {
         StartCoroutine(DespawnAfterDelay());
     }
 
-    IEnumerator DespawnAfterDelay()
+    private IEnumerator DespawnAfterDelay()
     {
         yield return new WaitForSeconds(delay);
-        Destroy(gameObject);
+        ParticlePooler.instance.AddToHitFXPool(gameObject);
     }
 
 

@@ -5,8 +5,11 @@ using UnityEngine;
 public class PaddleAI : MonoBehaviour {
 
     [Header("Up & down movement")]
-    public float pingpongrange;
     public float updownSpeed;
+    public Vector3 upperLimit;
+    public Vector3 lowerLimit;
+    public enum Dir {up = 0, down = 1 };
+    Dir direction;
 
     
     public enum MoveState { idle = 0, updown = 1, dodging = 2};
@@ -17,38 +20,88 @@ public class PaddleAI : MonoBehaviour {
     public float dodgeSpeed;
     public Vector3 predictedPosition;
 
+    
+
+    private void FixedUpdate()
+    {
+        SetupMoveLimits();
+        MovementBehaviour();
+    }
+
+    private void SetupMoveLimits() ///sets the movement's upper and lower limits
+    {
+        Vector3 tempPos = transform.position;
+        tempPos.y = upperLimit.y;
+        upperLimit = tempPos;
+        tempPos.y = lowerLimit.y;
+        lowerLimit = tempPos;
+    }
+
     public void TryDodge(Vector3 _predictedPos) ////Can be called by the ball to allow the paddle to start dodging when the player has attempted a try
     {
         predictedPosition = _predictedPos;
-        StartCoroutine(MovementSequence());
+        moveState = MoveState.dodging;
+        if (direction == Dir.up)
+        {
+            direction = Dir.down;
+        }
+        else
+        {
+            direction = Dir.up;
+        }
     }
 
-    IEnumerator MovementSequence() /////Checks for movement state and applies it 
-    {   
-        Vector3 tempPos = predictedPosition;
-        tempPos.x = transform.position.x;
-        tempPos.z = transform.position.z;
-        Debug.Log("Performing DodgeSequence");
-
-        while (moveState == MoveState.dodging)
-        { 
-            transform.position = Vector3.MoveTowards(transform.position, tempPos, -1f * dodgeSpeed * Time.deltaTime);
-            yield return new WaitForEndOfFrame();
-        }
-
-        while (moveState == MoveState.updown && transform.position != new Vector3(transform.position.x, Mathf.PingPong(Time.time * updownSpeed, pingpongrange) - pingpongrange / 2, transform.position.z))
+    private void MovementBehaviour()
+    {
+        switch (moveState)
         {
-            transform.position = Vector3.MoveTowards(transform.position, new Vector3(transform.position.x, Mathf.PingPong(Time.time * updownSpeed, pingpongrange) - pingpongrange / 2, transform.position.z), 1 * dodgeSpeed * Time.deltaTime);
+            case MoveState.updown:
 
-            yield return new WaitForEndOfFrame();
+                MoveUpDown(updownSpeed);
+
+                break;
+            case MoveState.dodging:
+                    
+                MoveUpDown(dodgeSpeed);
+                break;
         }
+    }
+
+    private void MoveUpDown(float speed)
+    {
+        switch (direction)
+        {
+            case Dir.up:
+
+                if(Vector3.Distance(transform.position, upperLimit) < 0.1f)
+                {
+                    direction = Dir.down;
+                }
+                else
+                {
+                    transform.position = Vector3.MoveTowards(transform.position, upperLimit, Time.deltaTime * speed);
+                }
+
+                break;
+
+            case Dir.down:
+
+                if (Vector3.Distance(transform.position, lowerLimit) < 0.1f)
+                {
+                    direction = Dir.up;
+                }
+                else
+                {
+                    transform.position = Vector3.MoveTowards(transform.position, lowerLimit, Time.deltaTime * speed);
+                }
+
+                break;
             
-        while (moveState == MoveState.updown)
-        {
-            transform.position = new Vector3(transform.position.x, Mathf.PingPong(Time.time * updownSpeed, pingpongrange) - pingpongrange / 2, transform.position.z);
-            yield return new WaitForEndOfFrame();
         }
-        
     }
+
+
+
+   
 
 }
